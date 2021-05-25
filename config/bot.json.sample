@@ -1,4 +1,16 @@
 {
     "SIGNING_SECRET": "74b9f650cc6a2c4d834b0298d95f3add예시",
-    "BOT_USER_OAUTH_ACCESS_TOKEN": "xoxb-..."
+    "BOT_USER_OAUTH_ACCESS_TOKEN": "xoxb-...",
+    "MEMBER": {
+        "실명": "호칭"
+    },
+    "MENU_CHOICE": [
+        "월: 누구",
+        "화 :누구",
+        "수 :누구",
+        "목 :누구",
+        "금 :누구"
+    ],
+    "PURCHASE": [
+    ]
 }

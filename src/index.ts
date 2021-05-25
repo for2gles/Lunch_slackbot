@@ -28,7 +28,7 @@ const webClient = new WebClient(CONFIG.BOT_USER_OAUTH_ACCESS_TOKEN);
 // 메시지 이벤트 구독하기
 slackEvents.on('message', async (event) => {
   // console.log(event);
-  const split_text = event.text.split(' ');
+  const split_text: string[] = event.text.split(' ');
   if (event.text == '$초기화') {
     set_member_reset();
     await do_order_chat(event);
@@ -45,7 +45,7 @@ slackEvents.on('message', async (event) => {
       await do_order_chat(event);
     } else {
       webClient.chat.postMessage({
-        text: '이미 패스했잖아욧! :선글라스:',
+        text: '이미 패스했잖아욧!',
         channel: event.channel
       });
     }
@@ -53,9 +53,42 @@ slackEvents.on('message', async (event) => {
 
 
   if (split_text[0] == '$주문') {
+    if (split_text.length == 1) {
+      webClient.chat.postMessage({
+        text: '주문할 항목을 입력해주세요~',
+        channel: event.channel
+      });
+      return;
+    }
+    split_text.shift();
     const userinfo = await get_userinfo(event.user);
-    memory[userinfo.user.real_name] = split_text[1].trim();
+    memory[userinfo.user.real_name] = split_text.join(' ');
     await do_order_chat(event);
+  }
+
+
+  if (event.text == '$사용법') {
+    webClient.chat.postMessage({
+      "channel": event.channel,
+      "text": "점심주문하세요~",
+      "blocks": [
+        {
+          "type": "header",
+          "text": {
+            "type": "plain_text",
+            "text": "점심 주문 사용법",
+            "emoji": true
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*- 명령어 -*\n\n*$사용법* : 사용방법을 안내합니다.\n*$초기화* : 주문상태를 초기화합니다.\n*$상태 | $현황* : 현재 주문상태를 확인할 수 있습니다.\n*$주문* : 주문을 합니다!\n ex) $주문 제육덮밥 곱배기요~"
+          }
+        }
+      ]
+    });
   }
 });
 
