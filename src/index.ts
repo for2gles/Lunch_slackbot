@@ -29,7 +29,7 @@ const webClient = new WebClient(CONFIG.BOT_USER_OAUTH_ACCESS_TOKEN);
 slackEvents.on('message', async (event) => {
   // console.log(event);
   const split_text: string[] = event.text.split(' ');
-  if (event.text == '$초기화') {
+  if (event.text == '$초기화' || event.text == '$밥먹자') {
     set_member_reset();
     await do_order_chat(event);
   }
@@ -42,7 +42,10 @@ slackEvents.on('message', async (event) => {
     const userinfo = await get_userinfo(event.user);
     if (memory[userinfo.user.real_name] != '패스') {
       memory[userinfo.user.real_name] = '패스';
-      await do_order_chat(event);
+      webClient.chat.postMessage({
+        text: '오늘은 패스합니다~',
+        channel: event.channel
+      });
     } else {
       webClient.chat.postMessage({
         text: '이미 패스했잖아욧!',
@@ -63,7 +66,10 @@ slackEvents.on('message', async (event) => {
     split_text.shift();
     const userinfo = await get_userinfo(event.user);
     memory[userinfo.user.real_name] = split_text.join(' ');
-    await do_order_chat(event);
+    webClient.chat.postMessage({
+      text: `${memory[userinfo.user.real_name]} : ${split_text.join(' ')} 주문완료`,
+      channel: event.channel
+    });
   }
 
 
@@ -84,7 +90,7 @@ slackEvents.on('message', async (event) => {
           "type": "section",
           "text": {
             "type": "mrkdwn",
-            "text": "*- 명령어 -*\n\n*$사용법* : 사용방법을 안내합니다.\n*$초기화* : 주문상태를 초기화합니다.\n*$상태 | $현황* : 현재 주문상태를 확인할 수 있습니다.\n*$주문* : 주문을 합니다!\n ex) $주문 제육덮밥 곱배기요~"
+            "text": "*- 명령어 -*\n\n*$사용법* : 사용방법을 안내합니다.\n*$초기화 | $밥먹자* : 주문상태를 초기화합니다.\n*$상태 | $현황* : 현재 주문상태를 확인할 수 있습니다.\n*$주문* : 주문을 합니다!\n ex) $주문 제육덮밥 곱배기요~"
           }
         }
       ]
