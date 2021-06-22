@@ -43,7 +43,7 @@ slackEvents.on('message', async (event) => {
     if (memory[userinfo.user.real_name] != '패스') {
       memory[userinfo.user.real_name] = '패스';
       webClient.chat.postMessage({
-        text: '오늘은 패스합니다~',
+        text: `${CONFIG.MEMBER[userinfo.user.real_name]} : 오늘은 패스할게요~`,
         channel: event.channel
       });
     } else {
@@ -67,7 +67,7 @@ slackEvents.on('message', async (event) => {
     const userinfo = await get_userinfo(event.user);
     memory[userinfo.user.real_name] = split_text.join(' ');
     webClient.chat.postMessage({
-      text: `${memory[userinfo.user.real_name]} : ${split_text.join(' ')} 주문완료`,
+      text: `${CONFIG.MEMBER[userinfo.user.real_name]} : ${split_text.join(' ')} 주문완료`,
       channel: event.channel
     });
   }
@@ -102,7 +102,7 @@ slackEvents.on('message', async (event) => {
 app.use('/slack/events', slackEvents.requestListener());
 
 // express 웹 서버 실행
-createServer(app).listen(3000, () => {
+createServer(app).listen(3003, () => {
   console.log('run slack bot');
 });
 
